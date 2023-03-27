@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Game</title>
+  </head>
+  <body>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <script>
+      const canvas = document.getElementById("gameCanvas");
+      const context = canvas.getContext("2d");
+
+      // Define the player and coin objects
+      const player = {
+        x: 50,
+        y: 50,
+        width: 20,
+        height: 20,
+        color: "red"
+      };
+
+      const coin = {
+        x: 200,
+        y: 200,
+        radius: 10,
+        color: "yellow"
+      };
+
+      // Define the keydown event handler to move the player
+      document.addEventListener("keydown", function(event) {
+        switch (event.keyCode) {
+          case 37: // Left arrow
+            player.x -= 10;
+            break;
+          case 38: // Up arrow
+            player.y -= 10;
+            break;
+          case 39: // Right arrow
+            player.x += 10;
+            break;
+          case 40: // Down arrow
+            player.y += 10;
+            break;
+        }
+      });
+
+      // Define the update function to check for collisions and redraw the canvas
+      function update() {
+        // Check for collision with the coin
+        const distance = Math.sqrt((player.x - coin.x) ** 2 + (player.y - coin.y) ** 2);
+        if (distance < player.width / 2 + coin.radius) {
+          // Player collected the coin, move it to a new location
+          coin.x = Math.random() * canvas.width;
+          coin.y = Math.random() * canvas.height;
+        }
+
+        // Redraw the canvas
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = player.color;
+        context.fillRect(player.x, player.y, player.width, player.height);
+        context.fillStyle = coin.color;
+        context.beginPath();
+        context.arc(coin.x, coin.y, coin.radius, 0, 2 * Math.PI);
+        context.fill();
+      }
+
+      // Call the update function every 50 milliseconds
+      setInterval(update, 50);
+    </script>
+  </body>
+</html>
